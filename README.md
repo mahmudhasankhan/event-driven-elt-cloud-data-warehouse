@@ -4,7 +4,7 @@
 ## Project Architecture
 
 <p>
-    <img src='./assets/data_pipeline.drawio.png' alt="Architecture">
+    <img src='./assets/diagram.png' alt="Pipeline">
 </p>
 
 
