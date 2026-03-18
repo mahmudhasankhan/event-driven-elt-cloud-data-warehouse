@@ -15,7 +15,7 @@ include/__pycache__
 include/dataset/Sales Data.xlsx
 include/gcp/service_account.json
 elt_env/
-
+venv/
 
 ## dbt subfolders
 dags/dbt/sales_dw_pipeline/.vscode
