@@ -12,9 +12,8 @@ app = FastAPI(title="GCS File Uploader")
 SERVICE_ACCOUNT = '/usr/local/airflow/include/gcp/gcs_service_account.json'
 BUCKET_NAME = 'sales-bucket'
 
-# ── Config ──────────────────────────────────────────────────────────────────
+# ── Credentials ──────────────────────────────────────────────────────────────────
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = SERVICE_ACCOUNT
-os.environ['GCS_BUCKET_NAME'] =  
 
 
 
@@ -43,14 +42,13 @@ async def upload_file(file: UploadFile = File(...)):
         bucket = get_bucket()
         blob = bucket.blob(file.filename)
 
-        blob.upload_from_file(file.file, content_type=file.content_type)
+        blob.upload_from_file(file.file, content_type=file.content_type or "application/octet-stream" )
 
         return JSONResponse({
             "success": True,
             "filename": file.filename,
             "destination": destination,
-            "bucket": GCS_BUCKET_NAME,
-            "size": len(contents),
+            "bucket": BUCKET_NAME
         })
 
     except GoogleAPIError as e:
@@ -61,4 +59,4 @@ async def upload_file(file: UploadFile = File(...)):
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "bucket": GCS_BUCKET_NAME}
+    return {"status": "ok", "bucket": BUCKET_NAME}
