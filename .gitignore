@@ -13,7 +13,7 @@ airflow.db
 dags/__pycache__
 include/__pycache__
 include/dataset/Sales Data.xlsx
-include/gcp/service_account.json
+include/gcp/
 elt_env/
 venv/
 
