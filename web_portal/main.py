@@ -1,25 +1,30 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
 from google.cloud import storage
 from google.api_core.exceptions import GoogleAPIError
+
+from pathlib import Path
+
 import os
 
 app = FastAPI(title="GCS File Uploader")
 
 
 # --- Path ------------------------------------------------------------
-SERVICE_ACCOUNT = '/usr/local/airflow/include/gcp/gcs_service_account.json'
-BUCKET_NAME = 'sales-bucket'
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+SERVICE_ACCOUNT = BASE_DIR / "include" / "gcp" / "sales-upload-bucket-service-account-key.json"
+
+BUCKET_NAME = 'sales-dw-bucket'
 
 # ── Credentials ──────────────────────────────────────────────────────────────────
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = SERVICE_ACCOUNT
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = str(SERVICE_ACCOUNT)
 
 
 
 def get_bucket():
     client = storage.Client()
-    return client.bucket(GCS_BUCKET_NAME)
+    return client.bucket(BUCKET_NAME)
 
 
 # ── Routes ───────────────────────────────────────────────────────────────────
@@ -47,7 +52,6 @@ async def upload_file(file: UploadFile = File(...)):
         return JSONResponse({
             "success": True,
             "filename": file.filename,
-            "destination": destination,
             "bucket": BUCKET_NAME
         })
 
