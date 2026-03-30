@@ -27,5 +27,7 @@ Setup my google cloud bucket with multi region and standard class storage option
 
 ### Validate that my web portal works or not
 
-Pending
+In order to proceed with this step, first I need to create a service account that will basically handle the upload of files on google cloud. 
+
+I created the account and also, assigned a storage object creator user, that will let the service account upload files but not overwrite it or replace it.
 
