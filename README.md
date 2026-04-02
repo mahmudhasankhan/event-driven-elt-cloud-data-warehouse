@@ -161,6 +161,10 @@ Follow these steps **in order** every time you want to run the full pipeline loc
 
 ### Step 1 — Start the FastAPI upload server
 
+<p>
+    <img src='./assets/file_upload_web_portal.png' alt="fast api web ui">
+</p>
+
 ```bash
 # From the project root
 cd web_portal
@@ -198,6 +202,12 @@ Open another terminal:
 ```bash
 ngrok http 8080
 ```
+You will see something like this:
+
+<p>
+    <img src='./assets/ngrok_tunnel.png' alt="ngrok tunnel">
+</p>
+
 
 Note the forwarding URL — it looks like:
 ```
@@ -253,32 +263,32 @@ Open `http://localhost:8000` in your browser. Drag and drop the monthly Excel sa
 
 **What happens next (automatically):**
 
-1. FastAPI streams the file to `gs://sales-dw-bucket/`
+1. FastAPI streams the file to `gs://sales-dw-bucket/`. You can see the file in the bucket below.
+<p>
+    <img src='./assets/bucket.png' alt="gcs bucket">
+</p>
+
 2. GCS fires an `OBJECT_FINALIZE` event → Eventarc
-3. Cloud Run function receives the event, reads the xlsx from GCS into memory, cleans column names, checks for duplicate batches, and loads data into `raw_data.sales` in BigQuery
+<p>
+    <img src='./assets/eventarc_trigger.png' alt="gcs bucket">
+</p>
+
+3. Cloud Run function receives the event, reads the xlsx from GCS into memory, cleans column names, checks for duplicate batches, and loads data into `raw_data.sales` in BigQuery. See the cloud run logs below.
+<p>
+    <img src='./assets/cloud_run_logs.png' alt="cloud run logs">
+</p>
+
+
 4. Cloud Run function calls the Airflow REST API to trigger the `transform` DAG
 5. Airflow runs the dbt TaskGroup — staging models first, then dimension tables, fact table, and all mart models
-6. Your BigQuery data warehouse is fully refreshed
+<p>
+    <img src='./assets/airflow dag.png' alt="airflow dag">
+</p>
 
----
-
-## Cloud Run function
-
-Place the following files in `cloud_run/`:
-
-**`cloud_run/main.py`** — the full extract-and-load logic (see conversation for complete code).
-
-**`cloud_run/requirements.txt`:**
-
-```txt
-functions-framework==3.*
-requests>=2.31.0
-pandas>=2.0.0
-openpyxl>=3.1.0
-google-cloud-bigquery>=3.11.0
-google-cloud-storage>=2.16.0
-pyarrow>=15.0.0
-```
+6. Your BigQuery data warehouse is fully refreshed.
+<p>
+    <img src='./assets/bq_warehouse.png' alt="bigquery dw">
+</p>
 
 ---
 
