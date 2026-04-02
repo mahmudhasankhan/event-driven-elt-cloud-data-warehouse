@@ -282,7 +282,7 @@ Open `http://localhost:8000` in your browser. Drag and drop the monthly Excel sa
 4. Cloud Run function calls the Airflow REST API to trigger the `transform` DAG
 5. Airflow runs the dbt TaskGroup — staging models first, then dimension tables, fact table, and all mart models
 <p>
-    <img src='./assets/airflow dag.png' alt="airflow dag">
+    <img src='./assets/airflow_dag.png' alt="airflow dag">
 </p>
 
 6. Your BigQuery data warehouse is fully refreshed.
