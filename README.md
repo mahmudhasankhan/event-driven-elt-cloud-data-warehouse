@@ -279,7 +279,11 @@ Open `http://localhost:8000` in your browser. Drag and drop the monthly Excel sa
 </p>
 
 
-4. Cloud Run function calls the Airflow REST API to trigger the `transform` DAG
+4. Cloud Run function calls the Airflow REST API to trigger the `transform` DAG. Here's the piece of code that calls the airflow rest api.
+<p>
+    <img src='./assets/trigger_function.png' alt="trigger_function">
+</p>
+
 5. Airflow runs the dbt TaskGroup — staging models first, then dimension tables, fact table, and all mart models
 <p>
     <img src='./assets/airflow_dag.png' alt="airflow dag">
